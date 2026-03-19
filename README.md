@@ -49,19 +49,6 @@ npm run seed         # creates admin + citizen accounts
 npm run dev          # starts on http://localhost:5000
 ```
 
-**Backend `.env` (already set):**
-```
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/civicconnect
-JWT_SECRET=civic_super_secret_jwt_key_2024
-FRONTEND_URL=http://localhost:5173
-AI_SERVICE_URL=http://localhost:8000
-
-# Blockchain — leave blank to use mock mode
-PRIVATE_KEY=your_wallet_private_key
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
-CONTRACT_ADDRESS=
-```
 
 ### 3. Frontend Setup
 
@@ -84,12 +71,6 @@ The service will:
 - Try to load YOLOv8 (`yolov8n.pt`) — auto-downloads on first run (~6 MB)
 - Fall back to OpenCV heuristic detection if model unavailable
 
-Test it:
-```bash
-curl -X POST http://localhost:8000/ai/detect \
-  -F "file=@/path/to/image.jpg"
-# → {"detectedIssue":"pothole","confidence":0.87}
-```
 
 ### 5. Blockchain Setup (Optional)
 
@@ -101,18 +82,6 @@ npx hardhat node        # starts local chain on http://127.0.0.1:8545
 # In a new terminal:
 npm run deploy:local    # deploys contract, prints CONTRACT_ADDRESS
 ```
-Copy `CONTRACT_ADDRESS` into `backend/.env`.
-Update `SEPOLIA_RPC_URL=http://127.0.0.1:8545` and `PRIVATE_KEY` from Hardhat output.
-
-**Option B — Sepolia Testnet:**
-1. Get a free Infura key at https://infura.io
-2. Get Sepolia ETH from https://sepoliafaucet.com
-3. Export MetaMask private key (Settings → Security → Export)
-4. Set in `backend/.env`:
-   ```
-   PRIVATE_KEY=0x...your_metamask_key
-   SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
-   ```
 5. Deploy:
    ```bash
    cd blockchain
@@ -216,29 +185,7 @@ cd ai-service && uvicorn main:app --port 8000 --reload
 cd blockchain && npx hardhat node
 ```
 
-Open: **http://localhost:5173**
 
----
-
-## Environment Variables Reference
-
-### Backend (`backend/.env`)
-| Variable          | Required | Description                         |
-|-------------------|----------|-------------------------------------|
-| `MONGO_URI`       | ✅       | MongoDB connection string            |
-| `JWT_SECRET`      | ✅       | JWT signing secret                  |
-| `FRONTEND_URL`    | ✅       | CORS origin (default: localhost:5173)|
-| `AI_SERVICE_URL`  | ⚠️ opt  | FastAPI URL (default: localhost:8000)|
-| `PRIVATE_KEY`     | ⚠️ opt  | Wallet private key for blockchain   |
-| `SEPOLIA_RPC_URL` | ⚠️ opt  | Infura/Alchemy RPC URL              |
-| `CONTRACT_ADDRESS`| ⚠️ opt  | Deployed contract address           |
-
-### Frontend (`frontend/.env`)
-| Variable       | Required | Description                      |
-|----------------|----------|----------------------------------|
-| `VITE_API_URL` | ✅       | Backend API URL                  |
-
----
 
 ## Security Features
 
